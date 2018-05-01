@@ -2,7 +2,8 @@
 编程中总结出来的问题：
 1.python中的input命令，默认返回的是string，如果想要用该返回值做一些操作，请注意返回变量的类型。
 2.python创建函数时，要将有默认参数的形参放到所有形参的最后面，否则会出non-default argument follows default argument错误。
-3.数据读取步骤：
+3.tf.__version__查看安装的tensorflow版本； pip3 upgrade tensorflow 更新tensorflow至最高版本
+4.数据读取步骤：
   # 生成一个先入先出队列和一个Queuerunner，生成文件名队列
     filename_queue = tf.train.string_input_producer(filename, shuffle=False)
   # 定义reader
@@ -20,3 +21,7 @@
             print(e_val, l_val)
         coord.request_stop()
         coord.join(threads)
+
+参考资料：https://blog.csdn.net/xuan_zizizi/article/details/78400839
+        https://zhuanlan.zhihu.com/p/27238630
+        https://blog.csdn.net/u010329292/article/details/68484485
