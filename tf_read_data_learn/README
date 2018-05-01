@@ -3,7 +3,18 @@
 1.python中的input命令，默认返回的是string，如果想要用该返回值做一些操作，请注意返回变量的类型。
 2.python创建函数时，要将有默认参数的形参放到所有形参的最后面，否则会出non-default argument follows default argument错误。
 3.tf.__version__查看安装的tensorflow版本； pip3 upgrade tensorflow 更新tensorflow至最高版本
-4.数据读取步骤：
+4.python中的区别
+  pass :不做任何事情，只起到占位的作用
+  continue: 跳出本次循环（跳出该次循环，继续下一次循环，知道满足循环结束条件，结束循环）
+  break：不管循环结束条件如何，结束整个循环
+  exit（）：结束整个程序
+5.在函数调用时，保持调用格式的一致，如choose(i, batch_size, value)或choose(i=.., batch_size=.., value=..),如果调用格式混合使用，将会出现positional argument follows keyword argument错误。
+6.数据读取大致步骤：具体实现看程序
+  # 准备数据文件 在想要创建文件的目录下启动终端，输入下面的代码
+    echo -e "Alpha1,A1\nAlpha2,A2\nAlpha3,A3">A.csv
+    echo -e "Bee1,B1\nBee2,B2\nBee3,B3">B.csv
+    echo -e "Sea1,C1\nSea2,C2\nSea3,C3">C.csv
+    echo -e "1,1,1,1,1\n0,1,0,1,0\n0,0,1,0,1\n1,0,0,1,0\n0,0,0,0,0">D.csv
   # 生成一个先入先出队列和一个Queuerunner，生成文件名队列
     filename_queue = tf.train.string_input_producer(filename, shuffle=False)
   # 定义reader

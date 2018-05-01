@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+# 预处理
 def prefile(filename):
     # 生成一个先入先出队列和一个Queuerunner，生成文件名队列
     filename_queue = tf.train.string_input_producer(filename, shuffle=False)
@@ -7,38 +8,6 @@ def prefile(filename):
     reader = tf.TextLineReader()
     key, value = reader.read(filename_queue)
     return value
-
-def run_Session(num_input, e_l_list):
-    # 运行图
-    with tf.Session() as sess:
-        coord = tf.train.Coordinator()  # 创建一个协调器，管理线程
-        threads = tf.train.start_queue_runners(coord=coord)  # 启动QueueRunner，此时文件名队列已经进队
-        for i in range(num_input):
-            e_val, l_val = sess.run(e_l_list)
-            print(e_val, l_val)
-        coord.request_stop()
-        coord.join(threads)
-
-def choose(i, batch_size, value):
-    if i>0 and i<5:
-        if i == 1:
-            example_batch, label_batch = one_reader_inorder(value, batch_size, capacity=200, num_threads=2)
-
-        elif i == 2:
-            example_batch, label_batch = one_reader_disorder(value, batch_size, capacity=200, num_threads=2)
-
-        elif i == 3:
-            example_batch, label_batch = multiple_readers_inorder(value, batch_size)
-
-        elif i == 4:
-            example_batch, label_batch = multiple_readers_disorder(value, batch_size)
-
-        return example_batch, label_batch
-
-    else:
-        print("i you input is out of range")
-        exit(0)
-
 
 
 def one_reader_inorder(value, batch_size, capacity=200, num_threads=2):
@@ -67,6 +36,41 @@ def multiple_readers_disorder(value, batch_size):
     example_batch, label_batch = tf.train.shuffle_batch_join(example_list, batch_size=batch_size, capacity=200, min_after_dequeue=100)
     return example_batch, label_batch
 
+
+# 选择读取模式文件
+def choose(i, batch_size, value):
+    if i>0 and i<5:
+        if i == 1:
+            example_batch, label_batch = one_reader_inorder(value, batch_size, capacity=200, num_threads=2)
+
+        elif i == 2:
+            example_batch, label_batch = one_reader_disorder(value, batch_size, capacity=200, num_threads=2)
+
+        elif i == 3:
+            example_batch, label_batch = multiple_readers_inorder(value, batch_size)
+
+        elif i == 4:
+            example_batch, label_batch = multiple_readers_disorder(value, batch_size)
+
+        return example_batch, label_batch
+
+    else:
+        print("i you input is out of range")
+        exit(0)
+
+# 线程运行文件
+def run_Session(num_input, e_l_list):
+    # 运行图
+    with tf.Session() as sess:
+        coord = tf.train.Coordinator()  # 创建一个协调器，管理线程
+        threads = tf.train.start_queue_runners(coord=coord)  # 启动QueueRunner，此时文件名队列已经进队
+        for i in range(num_input):
+            e_val, l_val = sess.run(e_l_list)
+            print(e_val, l_val)
+        coord.request_stop()
+        coord.join(threads)
+
+# 主函数
 def main(i, batch_size, num_input, filename=['A.csv', 'B.csv', 'C.csv']):
     value = prefile(filename)
     example_batch, label_batch = choose(i, batch_size, value)
@@ -74,4 +78,4 @@ def main(i, batch_size, num_input, filename=['A.csv', 'B.csv', 'C.csv']):
 
 
 
-main(1, 4, 9)
+main(2, 4, 9)
