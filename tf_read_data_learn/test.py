@@ -19,10 +19,6 @@ def run_Session(num_input, e_l_list):
         coord.request_stop()
         coord.join(threads)
 
-def information():
-    print("Choose i=1 of one reader inorder\nchoose i=2 of one reader disorder\nchoose i=3 of multiple readers inorder\nchoose i=4 of multiple readers disorder")
-
-
 def choose(i, batch_size, value):
     if i>0 and i<5:
         if i == 1:
@@ -42,7 +38,6 @@ def choose(i, batch_size, value):
     else:
         print("i you input is out of range")
         exit(0)
-
 
 
 
