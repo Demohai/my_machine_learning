@@ -1,0 +1,22 @@
+以从文件中读取.csv格式的数据到tensorflow中为例子，其它格式的文件读取步骤类似。
+编程中总结出来的问题：
+1.python中的input命令，默认返回的是string，如果想要用该返回值做一些操作，请注意返回变量的类型。
+2.python创建函数时，要将有默认参数的形参放到所有形参的最后面，否则会出non-default argument follows default argument错误。
+3.数据读取步骤：
+  # 生成一个先入先出队列和一个Queuerunner，生成文件名队列
+    filename_queue = tf.train.string_input_producer(filename, shuffle=False)
+  # 定义reader
+    reader = tf.TextLineReader()
+    key, value = reader.read(filename_queue)
+  # 定义 decoder
+    example, label = tf.decode_csv(value, record_defaults=[['null'], ['null']])  # ['null']解析为string类型 ，[1]为整型，[1.0]解析为浮点。
+    example_batch, label_batch = tf.train.batch([example, label], batch_size=batch_size, capacity=capacity, num_threads=num_threads)  # 保证样本和标签一一对应  正常顺序
+  # 运行图
+    with tf.Session() as sess:
+        coord = tf.train.Coordinator()  # 创建一个协调器，管理线程
+        threads = tf.train.start_queue_runners(coord=coord)  # 启动QueueRunner，此时文件名队列已经进队
+        for i in range(num_input):
+            e_val, l_val = sess.run(e_l_list)
+            print(e_val, l_val)
+        coord.request_stop()
+        coord.join(threads)

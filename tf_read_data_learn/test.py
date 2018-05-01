@@ -1,8 +1,8 @@
 import tensorflow as tf
 
-def prefile(filenames):
+def prefile(filename):
     # 生成一个先入先出队列和一个Queuerunner，生成文件名队列
-    filename_queue = tf.train.string_input_producer(filenames, shuffle=False)
+    filename_queue = tf.train.string_input_producer(filename, shuffle=False)
     # 定义reader
     reader = tf.TextLineReader()
     key, value = reader.read(filename_queue)
@@ -23,7 +23,7 @@ def information():
     print("Choose i=1 of one reader inorder\nchoose i=2 of one reader disorder\nchoose i=3 of multiple readers inorder\nchoose i=4 of multiple readers disorder")
 
 
-def choose(i, batch_size):
+def choose(i, batch_size, value):
     if i>0 and i<5:
         if i == 1:
             example_batch, label_batch = one_reader_inorder(value, batch_size, capacity=200, num_threads=2)
@@ -72,8 +72,11 @@ def multiple_readers_disorder(value, batch_size):
     example_batch, label_batch = tf.train.shuffle_batch_join(example_list, batch_size=batch_size, capacity=200, min_after_dequeue=100)
     return example_batch, label_batch
 
-information()
-j = int(input("Please input i:"))    # input()输入，程序默认为字符串，此处需转换成int型
-value = prefile(filenames=['A.csv', 'B.csv', 'C.csv'])
-example_batch, label_batch = choose(i=j, batch_size=5)
-run_Session(num_input=10, e_l_list=[example_batch, label_batch])
+def main(i, batch_size, num_input, filename=['A.csv', 'B.csv', 'C.csv']):
+    value = prefile(filename)
+    example_batch, label_batch = choose(i, batch_size, value)
+    run_Session(num_input, [example_batch, label_batch])
+
+
+
+main(1, 4, 9)
