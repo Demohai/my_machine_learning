@@ -1,0 +1,52 @@
+对MNIST数据集进行训练和预测：
+两层卷积神经网络，每一层包括一个卷积层和一个最大池化层；
+两个全连接层。对第一个全连接层进行dropout优化，防止因节点过多，造成数据过拟合。
+
+编程实现过程中，总结出来的经验及学到的知识：
+1、Tensorflow交叉熵函数：cross_entropy
+以下交叉熵计算函数输入中的logits都不是softmax或sigmoid的输出，因为它在函数内部进行了sigmoid或softmax操作
+tf.nn.sigmoid_cross_entropy_with_logits(_sentinel=.., labels=.., logits=.., name=..)
+_sentinel:本质上是不用的参数，不用填
+labels:一个和logits具有相同的数据类型（type）和尺寸形状（shape）的张量（tensor)
+logits:一个数据类型（type）是float32或float64的张量
+shape:[batch_size,num_classes],单样本是[num_classes]
+name:操作的名字，可选项
+该函数对于输入的logits先通过sigmoid函数计算，再计算它们的交叉熵，但是它对交叉熵的计算方式进行了优化，使得结果不至于溢出
+它适用于每个类别相互独立但互不排斥的情况：例如一幅图可以同时包含一条狗和一只大象
+
+tf.nn.softmax_cross_entropy_with_logits(_sentinel=.., labels=.., logits=.., dim=-1, name=..)
+_sentinel:本质上是不用的参数，不用填
+labels:tensor，每一行labels必须是一个有效的one_short型分布(每一行向量中的元素，只有一个值为1，其他值为0)
+logits:labels和logits具有相同的数据类型（type）和尺寸（shape）
+shape:[batch_size,num_classes],单样本是[num_classes]
+name:操作的名字，可选项
+它对于输入的logits先通过softmax函数计算
+它适用于每个类别相互独立且排斥的情况，一幅图只能属于一类，而不能同时包含一条狗和一只大象
+
+tf.nn.sparse_softmax_cross_entropy_with_logits(_sentinel=.., labels=.., logits=.., name=..)
+_sentinel:本质上是不用的参数，不用填
+labels:shape为[batch_size],为一维数组，每一个labels[i]元素是[0,num_classes)的一个索引, 用tf.argmax(input_tensor, axis=None, name=None, dimension=None)函数获取，type为int32或int64
+logits:shape为[batch_size,num_classes],type为float32或float64
+name:操作的名字，可选项
+它适用于每个类别相互独立且排斥的情况，一幅图只能属于一类，而不能同时包含一条狗和一只大象 
+
+tf.nn.weighted_cross_entropy_with_logits(labels, logits, pos_weight, name=None)
+计算具有权重的sigmoid交叉熵sigmoid_cross_entropy_with_logits（）
+_sentinel:本质上是不用的参数，不用填
+labels:一个和logits具有相同的数据类型（type）和尺寸形状（shape）的张量（tensor）
+shape:[batch_size,num_classes],单样本是[num_classes]
+logits:一个数据类型（type）是float32或float64的张量
+pos_weight:正样本的一个系数
+name:操作的名字，可填可不
+计算公式: pos_weight*labels * -log(sigmoid(logits)) + (1 - labels) * -log(1 - sigmoid(logits))
+
+2、tf.argmax(input_tensor, axis=None, name=None, dimension=None)函数：
+功能：对于输入矩阵，按行或列返回最大值所在的位置索引。
+     input_tensor: 输入矩阵
+     axis: axis = 1，返回每一行最大值在该行的位置索引
+           axis = 0，返回每一列最大值在该列的位置索引
+     Name：该操作名字，可选项
+     Dimension:一般不用
+
+
+
