@@ -2,7 +2,7 @@
 深度卷积生成对抗网络
 用tensorflow构造一个深度卷积生成对抗网络，生成手写数字图片
 ·作者：朱海
-·项目地址：
+·项目地址：https://github.com/Demohai/my_tensorflow_learn/tree/master/Neural_Network/DCGAN
 """
 import matplotlib.pyplot as plt
 import numpy as np
