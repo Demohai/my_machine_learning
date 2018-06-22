@@ -10,6 +10,7 @@ import random
 import matplotlib.pyplot as plt
 import scipy.io as scio
 
+
 # deifine kernel function
 def kernel(x, z, sigma=10, kernelOption='Gauss'):
     m = x.shape[0]
@@ -26,6 +27,7 @@ def kernel(x, z, sigma=10, kernelOption='Gauss'):
     else:
         raise NameError("Not support kernel type! You can use 'Linear' or 'Gause'")
 
+
 # calculate error_i
 def calError(x, y, i, alphas, b):
     # ---------------------------------------------------------------
@@ -38,10 +40,12 @@ def calError(x, y, i, alphas, b):
     error_i = f_xi - y[i]
     return error_i
 
+
 # update error cache, 1 stands for corresponding error updated, 0 stands for corresponding unupdated
 def updateError(x, y, i, alphas, b, error):
     error_i = calError(x, y, i, alphas, b)
     error[i] = [1, error_i]
+
 
 def findNonBound(alphas, C):
     nonbound = []
@@ -49,6 +53,7 @@ def findNonBound(alphas, C):
         if 0 < alphas[i] < C:
             nonbound.append(i)
     return nonbound
+
 
 # produce a random j of range 0-m with max step
 def select_j(x, y, i, error, error_i, alphas, b):
@@ -74,6 +79,7 @@ def select_j(x, y, i, error, error_i, alphas, b):
         error_j = calError(x, y, j, alphas, b)
     return j, error_j
 
+
 # limit alphas[j]
 def clipAlpha(alpha_j, H, L):
     if alpha_j > H:
@@ -82,6 +88,7 @@ def clipAlpha(alpha_j, H, L):
     if alpha_j < L:
         alpha_j = L
     return alpha_j
+
 
 # inner loop
 def inner_loop(x, y, toler, C, alphas, error, i, b):
@@ -199,6 +206,7 @@ def SMO(x, y, C, toler, maxIter):
     print("Training finished!")
     return alphas, b
 
+
 # build training examples and testing examples
 def loadDataSet(filename):
     data = scio.loadmat(filename)
@@ -210,6 +218,7 @@ def loadDataSet(filename):
     test_x = dataset[0:2, 1200:1300].T
     test_y = dataset[2, 1200:1300].T.reshape(100, 1)
     return train_x, train_y, test_x, test_y
+
 
 # plot trained svm model
 def show(train_x, train_y, alphas, b):
@@ -242,6 +251,7 @@ def show(train_x, train_y, alphas, b):
 
     plt.contour(x1, x2, w, 0, colors='g')
     plt.show()
+
 
 # test your svm model given test set
 def test(test_x, test_y, train_x, train_y, alphas, b):
