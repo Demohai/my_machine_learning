@@ -10,7 +10,7 @@ import tensorflow as tf
 
 # 导入数据
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("./MNIST_data_set/", one_hot=True)
+mnist = input_data.read_data_sets("tmp/MNIST_data_set/", one_hot=True)
 
 # 设置训练参数
 num_steps = 10000
