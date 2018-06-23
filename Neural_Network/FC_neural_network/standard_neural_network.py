@@ -6,8 +6,8 @@ mnist = input_data.read_data_sets("/tmp/MNIST_data_set/", one_hot=True)   # 加�
 
 # 定义输入数据
 def input_data(Input_node, Output_node):
-    x = tf.placeholder(tf.float32, shape=[None,Input_node], name='input_x')
-    y = tf.placeholder(tf.float32, shape=[None,Output_node], name='output_y')
+    x = tf.placeholder(tf.float32, shape=[None, Input_node], name='input_x')
+    y = tf.placeholder(tf.float32, shape=[None, Output_node], name='output_y')
     return x, y
 
 
@@ -60,7 +60,7 @@ def train(Learning_rate_base, Learning_rate_decay, Batch_size, cost):
 
 # 定义评估函数，此程序以准确度作为评估指标
 def evaluate(y, y_pred):
-    correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_pred,1))
+    correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_pred, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     return accuracy
 
