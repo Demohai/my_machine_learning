@@ -86,7 +86,7 @@ def model(Input_node, Layer1_model, Output_node, Learning_rate_base, Learning_ra
                 validate_accuracy = sess.run(accuracy, feed_dict=validate_feed)
                 print("After %d training steps ,validation accuracy is %g" % (i, validate_accuracy))
 
-            # 每一次遍历训练集，随机取Batch—size个数据训练
+            # 每一次取batch_size大小的数据
             x_batch, y_batch = mnist.train.next_batch(Batch_size)
             sess.run(train_step, feed_dict={x: x_batch, y: y_batch})
 

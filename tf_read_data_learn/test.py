@@ -64,14 +64,11 @@ def choose(i, batch_size, value):
 
 
 # 线程运行文件
-def run_Session(num_input, e_l_list, value, example_batch, label_batch):
+def run_Session(num_input, e_l_list):
     # 运行图
     with tf.Session() as sess:
         coord = tf.train.Coordinator()  # 创建一个协调器，管理线程
         threads = tf.train.start_queue_runners(coord=coord)  # 启动QueueRunner，此时文件名队列已经进队
-        print("value: ", sess.run(value))
-        print("example_batch: " + str(sess.run(example_batch)) + "\n")
-        print("label_batch: " + str(sess.run(label_batch)) + "\n")
         for i in range(num_input):
             e_val, l_val = sess.run(e_l_list)
             print(str(e_val) + "\n" + str(l_val))
@@ -83,7 +80,7 @@ def run_Session(num_input, e_l_list, value, example_batch, label_batch):
 def main(i, batch_size, num_input, filename=['A.csv', 'B.csv', 'C.csv']):
     value = prefile(filename)
     example_batch, label_batch = choose(i, batch_size, value)
-    run_Session(num_input, [example_batch, label_batch], value, example_batch, label_batch)
+    run_Session(num_input, [example_batch, label_batch])
 
 
-main(1, 9, 1)
+main(1, 4, 5)
