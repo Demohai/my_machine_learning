@@ -66,7 +66,7 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate, name="Adam_train
 init = tf.global_variables_initializer()
 
 # 创建一个saver操作，用来存储所有变量，weights和biases
-saver = tf.train.Saver(max_to_keep=2)
+saver = tf.train.Saver()
 
 # 运行第一个会话
 print("Starting 1st session...")
@@ -108,9 +108,20 @@ with tf.Session() as sess:
 
 print("Starting 2nd session...")
 with tf.Session() as sess:
-    sess.run(init)
-    new_saver = tf.train.import_meta_graph("/tmp/model/-41.meta")
-    new_saver.restore(sess, tf.train.latest_checkpoint('/tmp/model/'))
+    # ---------One model restore method----------------------------
+    # new_saver = tf.train.import_meta_graph("/tmp/model/-41.meta")
+    # new_saver.restore(sess, tf.train.latest_checkpoint('/tmp/model/'))
+    # --------------------------------------------------------------
+
+    # ---------Another model restore method-----------
+    ckpt = tf.train.get_checkpoint_state('/tmp/model')
+    if ckpt and ckpt.model_checkpoint_path:
+        # Restores model from checkpoint
+        saver.restore(sess, ckpt.model_checkpoint_path)
+    else:
+        print("No checkpoint file found")
+    # -------------------------------------------------
+
     # 恢复placeholder
     graph = tf.get_default_graph()
     images = graph.get_tensor_by_name("images:0")
